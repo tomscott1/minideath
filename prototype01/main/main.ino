@@ -1,5 +1,5 @@
 int DIG[4]={10,11,12,13};  //pins relating to each digit
-byte Numcode[10]={0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6};//the character code for number 1-9
+int LOOPTIME = 12000;  // 1 minute (in 5ms chunks)
 
 void setup()
 {
@@ -13,12 +13,65 @@ void setup()
 void loop() {
   removeDecimal(); // turn off decimal place once as it will never need to be on.
   int i;
-  int n;
-  for (i=0;i<4;i++)
-  {
-    countDigit(i, 200);
-  }
+  int ticker = -5;
 
+  for (i=0;i<LOOPTIME;i++)
+  {
+    ticker = ticker + 5; // test ticker += 5;
+    digitOneScript(ticker);
+   digitTwoScript(ticker);
+//    digitThreeScript(ticker);
+//    digitFourScript(ticker);
+    delay(5);
+  }
+  //reset all digits...
+}
+
+void digitOneScript(int tick) {
+  int digNum = 0;
+  // Script for 1st digit. This will show nothing for 50ms, then 1 for 200ms, then 2 for 200ms etc...
+  int startDelay = 50; // start counting 50ms after loop begins
+  int countSpeed = 200; // change number every 200ms
+  // normalize tick to speed
+  // int normalTick = tick - startDelay
+  if (tick < startDelay) {
+    turnOff(digNum);
+  } else {
+    int result = (tick - startDelay)/countSpeed;
+    if (result < 10) {
+      digitalWrite(DIG[digNum],HIGH);
+      displayDigit(result);
+    } else {
+      digitalWrite(DIG[digNum],HIGH);
+      displayDigit(result % 10);
+    }
+  }
+  // HACK: until I can figure how to calculate 1-9 using the tick and countSpeed
+
+  // if(((tick-startDelay)/countSpeed)%1)
+}
+
+void digitTwoScript(int tick) {
+  int digNum = 1;
+  int startDelay = 2000;
+  int countSpeed = 400; 
+  if (tick < startDelay) {
+    turnOff(digNum);
+  } else {
+    int result = (tick - startDelay)/countSpeed;
+    if (result < 10) {
+      digitalWrite(DIG[digNum],HIGH);
+      displayDigit(result);
+    } else {
+      digitalWrite(DIG[digNum],HIGH);
+      displayDigit(result % 10);
+    }
+  }
+}
+
+
+void turnOff(int digit) {
+  digitalWrite(DIG[digit],LOW);
 }
 
 void countDigit(int digit, int speedDelay) {
