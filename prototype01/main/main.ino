@@ -18,16 +18,28 @@ void loop() {
   for (i=0;i<LOOPTIME;i++)
   {
     ticker = ticker + 5; // test ticker += 5;
-    digitOneScript(ticker);
-   digitTwoScript(ticker);
-//    digitThreeScript(ticker);
-//    digitFourScript(ticker);
+    int dig1value = digitOneScript(ticker);
+    int dig2value = digitTwoScript(ticker);
+    // TODO: refactor this code and figure out how to display two different
+    // digits, logic of setting the numbers may need to be changed back to the
+    // old style.
+    if (dig1value > 0) {
+      digitalWrite(DIG[0], HIGH);
+    } else {
+      digitalWrite(DIG[0], LOW);
+    }
+    if (dig2value > 0) {
+      digitalWrite(DIG[1], HIGH);
+    } else {
+      digitalWrite(DIG[1], LOW);
+    }
+
     delay(5);
   }
   //reset all digits...
 }
 
-void digitOneScript(int tick) {
+int digitOneScript(int tick) {
   int digNum = 0;
   // Script for 1st digit. This will show nothing for 50ms, then 1 for 200ms, then 2 for 200ms etc...
   int startDelay = 50; // start counting 50ms after loop begins
@@ -35,15 +47,14 @@ void digitOneScript(int tick) {
   // normalize tick to speed
   // int normalTick = tick - startDelay
   if (tick < startDelay) {
-    turnOff(digNum);
+    return 0;
   } else {
     int result = (tick - startDelay)/countSpeed;
     if (result < 10) {
-      digitalWrite(DIG[digNum],HIGH);
-      displayDigit(result);
+      // digitalWrite(DIG[digNum],HIGH);
+      return result;
     } else {
-      digitalWrite(DIG[digNum],HIGH);
-      displayDigit(result % 10);
+      return result % 10;
     }
   }
   // HACK: until I can figure how to calculate 1-9 using the tick and countSpeed
@@ -51,20 +62,19 @@ void digitOneScript(int tick) {
   // if(((tick-startDelay)/countSpeed)%1)
 }
 
-void digitTwoScript(int tick) {
+int digitTwoScript(int tick) {
   int digNum = 1;
   int startDelay = 2000;
-  int countSpeed = 400; 
+  int countSpeed = 400;
   if (tick < startDelay) {
-    turnOff(digNum);
+    return 0;
   } else {
     int result = (tick - startDelay)/countSpeed;
     if (result < 10) {
-      digitalWrite(DIG[digNum],HIGH);
-      displayDigit(result);
+      // digitalWrite(DIG[digNum],HIGH);
+      return result;
     } else {
-      digitalWrite(DIG[digNum],HIGH);
-      displayDigit(result % 10);
+      return result % 10;
     }
   }
 }
